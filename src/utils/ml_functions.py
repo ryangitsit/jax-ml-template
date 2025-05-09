@@ -1,4 +1,5 @@
 import jax.numpy as jnp
+from jax.numpy.linalg import inv
 import jax
 import optax
 
@@ -35,3 +36,39 @@ def loss_CE(logits, labels):
 @jax.jit
 def create_one_hot_labels(num_classes, labels_by_index):
     return jax.nn.one_hot(labels_by_index, num_classes)
+
+@jax.jit
+def train_step(state, x, y):
+    def loss_fn(params):
+        logits = state.apply_fn({'params': params}, x)
+        loss = optax.softmax_cross_entropy(logits, y).mean()
+        return loss
+    grads = jax.grad(loss_fn)(state.params)
+    return state.apply_gradients(grads=grads)
+
+@jax.jit
+def compute_accuracy(state, x, y):
+    logits = state.apply_fn({'params': state.params}, x)
+    predictions = jnp.argmax(logits, axis=-1)
+    targets = jnp.argmax(y, axis=-1)
+    return jnp.mean(predictions == targets)
+
+
+def discretize_nojit(A, B, step):
+    I  = jnp.eye(A.shape[0])
+    BL = inv(I - (step / 2.0) * A)
+    Ab = BL @ (I + (step / 2.0) * A)
+    Bb = (BL * step) @ B
+    return Ab, Bb
+
+def make_HiPPO_nojit(N):
+    P = jnp.sqrt(1 + 2 * jnp.arange(N))
+    A = P[:, jnp.newaxis] * P[jnp.newaxis, :]
+    A = jnp.tril(A) - jnp.diag(jnp.arange(N))
+    B = jnp.sqrt(2 * jnp.arange(N) + 1.0)
+    B = B.reshape(len(B),1)
+    return -A, B
+
+def make_discrete_HiPPO_nojit(N,L):
+    A, B = make_HiPPO_nojit(N)
+    return discretize_nojit(A, B, step=1.0 / L)
