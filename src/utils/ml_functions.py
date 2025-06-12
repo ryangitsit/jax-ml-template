@@ -38,13 +38,14 @@ def create_one_hot_labels(num_classes, labels_by_index):
     return jax.nn.one_hot(labels_by_index, num_classes)
 
 @jax.jit
-def train_step(state, x, y):
+def train_step(state, x, y, hyper):
     def loss_fn(params):
         logits = state.apply_fn({'params': params}, x)
         loss = optax.softmax_cross_entropy(logits, y).mean()
         return loss
-    grads = jax.grad(loss_fn)(state.params)
-    return state.apply_gradients(grads=grads)
+    loss_and_grad_fn = jax.jit(jax.value_and_grad(loss_fn))
+    loss, grads = loss_and_grad_fn(state.params)
+    return loss, state.apply_gradients(grads=grads), hyper
 
 @jax.jit
 def compute_accuracy(state, x, y):

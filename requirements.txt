@@ -9,6 +9,7 @@ debugpy==1.8.14
 decorator==5.2.1
 etils==1.12.2
 executing==2.2.0
+flax==0.10.6pip
 fonttools==4.57.0
 iniconfig==2.1.0
 ipykernel==6.29.5
@@ -49,6 +50,12 @@ seaborn==0.13.2
 setuptools==80.3.1
 six==1.17.0
 stack-data==0.6.3
+tensorboard==2.19.0
+tensorboard-data-server==0.7.2
+tensorflow==2.19.0
+tensorflow-datasets==4.9.9
+tensorflow-metadata==1.17.1
+tensorstore==0.1.75
 threadpoolctl==3.6.0
 toolz==1.0.0
 tornado==6.4.2

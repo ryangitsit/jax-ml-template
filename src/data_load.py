@@ -21,7 +21,7 @@ def permute_mnist(flat_images, seed=42):
     permuted_images = flat_images[:, permutation]  # Apply same perm to all
     return permuted_images
 
-def load_data(dataset='mnist'):
+def load_data(dataset='mnist', truncate=None):
     warnings.filterwarnings("ignore", category=DeprecationWarning)
     if dataset == 'MNIST':
         # Load MNIST
@@ -48,6 +48,17 @@ def load_data(dataset='mnist'):
 
     else:
         raise ValueError(f"{dataset} not a supported dataset.")
+    
+    if truncate is not None:
+        train_trunc = int(X_train.shape[0]*truncate)
+        test_trunc = int(X_test.shape[0]*truncate)
+
+        X_train = X_train[:train_trunc]
+        y_train = y_train[:train_trunc]
+        y_train_as_idx = y_train_as_idx[:train_trunc]
+        X_test = X_test[:test_trunc]
+        y_test = y_test[:test_trunc]
+        y_test_as_idx = y_test_as_idx[:test_trunc]
 
 
     return X_train, y_train, y_train_as_idx, X_test, y_test, y_test_as_idx
