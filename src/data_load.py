@@ -23,7 +23,7 @@ def permute_mnist(flat_images, seed=42):
 
 def load_data(dataset='mnist', truncate=None):
     warnings.filterwarnings("ignore", category=DeprecationWarning)
-    if dataset == 'MNIST':
+    if dataset == 'MNIST' or dataset == 'mnist':
         # Load MNIST
         ds = tfds.load('mnist', split='train', batch_size=-1)
         test_ds = tfds.load('mnist', split='test', batch_size=-1)
@@ -39,7 +39,7 @@ def load_data(dataset='mnist', truncate=None):
         y_train = jax.nn.one_hot(y_train_as_idx, 10)
         y_test  = jax.nn.one_hot(y_test_as_idx, 10)
 
-    if dataset=="psMNIST":
+    elif dataset=="psMNIST":
         # X_train = permute_mnist(X_train)
         # X_test  = permute_mnist(X_test)
 

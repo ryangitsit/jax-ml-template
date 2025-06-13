@@ -65,7 +65,8 @@ def plot_pallete(colors):
     plt.show()
     
 
-def performance_plot(accs,costs):
+
+def performance_plot(accs,costs,show=True):
     plt, _, colors = init_plot_params(
         figsize=(8,3),
         xlabel="Epochs",
@@ -75,4 +76,6 @@ def performance_plot(accs,costs):
     plt.plot(costs/np.max(costs),color=colors[0],label="cost")
     plt.title(f"Min Loss = {np.min(costs/np.max(costs)):.2} and Max Acc = {np.max(accs):.2}")
     plt.legend()
-    plt.show()
+    if show==True:
+        plt.show()
+    return plt

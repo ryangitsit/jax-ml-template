@@ -32,7 +32,6 @@ def loss_CE_manual(logits, labels):
 def loss_CE(logits, labels):
     return optax.softmax_cross_entropy(logits=logits, labels=labels).mean()
 
-
 @jax.jit
 def create_one_hot_labels(num_classes, labels_by_index):
     return jax.nn.one_hot(labels_by_index, num_classes)

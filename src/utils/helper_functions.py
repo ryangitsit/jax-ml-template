@@ -39,7 +39,7 @@ def picklit(obj,path,name):
 
 def save_fig(plt,path,name):
     save_path = get_save_path(path,name)
-    plt.savefig(save_path)
+    plt.savefig(f"{save_path}.png")
 
 def picklin(path,name):
     with open(f'../../{path}/{name}.pkl', 'rb') as f:

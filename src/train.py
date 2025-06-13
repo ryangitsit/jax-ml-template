@@ -21,19 +21,21 @@ def train(
         ):
 
     X_train, y_train, y_train_as_idx, X_test, y_test, y_test_as_idx = dat.load_data(
-        dataset='psMNIST', truncate=truncate)
+        dataset=dataset, truncate=truncate)
 
 
     key = jax.random.PRNGKey(key_seed)
     if model_type=="MLP":
         # Define model and training state
         model = MLP(hidden_sizes=hidden_layers)
-        variables = model.init(key, X_train[:1])['params']
+        params = model.init(key, X_train[:1])['params']
 
     elif model_type=="SSM":
         model = SSM(hidden_dim=hidden_dim, input_dim=1, output_dim=10, seq_len=784)
         x = jnp.ones(X_train[:batch_size].reshape(batch_size, 784, 1).shape) 
         params = model.init(key, x)['params']
+
+    print(f"Created network with shapes: \n{jax.tree.map(lambda x: x.shape, params)}")
 
     if decay is not None:
         schedule = optax.exponential_decay(

@@ -8,6 +8,17 @@ __pycache__/
 
 # Custom
 scratch.*
+params/
+models/
+figs/
+plots/
+sweeps/
+data/
+datasets/
+img/
+configs/
+results/
+
 
 # Distribution / packaging
 .Python
